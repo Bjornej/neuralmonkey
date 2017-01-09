@@ -338,10 +338,11 @@ class Decoder(object):
                 x = linear([inp] + attns, self.embedding_size)
                 # Run the RNN.
 
+                prev_state = state
                 cell_output, state = cell(x, state)
                 states.append(state)
                 # Run the attention mechanism.
-                attns = [a.attention(state) for a in att_objects]
+                attns = [a.attention(state, prev_state, x) for a in att_objects]
 
                 if attns:
                     output = linear([cell_output] + attns, cell.output_size,
